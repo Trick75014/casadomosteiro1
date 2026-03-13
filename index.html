@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>🏠 Casa do Mosteiro — Calendário</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --night:#1C2B2D; --terra:#C2714F; --terra-d:#A85A3A;
+  --sand:#F5EFE6; --sand-d:#EDE3D5; --gold:#D4A853;
+  --airbnb:#FF5A5F; --booking:#003580;
+  --white:#FDFAF6; --mist:#E8F0F2; --leaf:#4A7C59;
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body { font-family:'DM Sans',sans-serif; background:var(--sand); color:var(--night); min-height:100vh; }
+
+/* HEADER */
+.hdr { background:var(--night); padding:20px 18px 16px; }
+.hdr-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+.hdr-title { font-family:'Playfair Display',serif; color:var(--sand); font-size:1.15rem; }
+.hdr-sub { font-size:.65rem; color:var(--gold); letter-spacing:.1em; text-transform:uppercase; font-weight:300; }
+.hdr-stats { display:flex; gap:6px; flex-wrap:wrap; justify-content:flex-end; }
+.hdr-stat { background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.1); border-radius:10px; padding:5px 10px; text-align:center; }
+.hdr-stat-n { font-size:.95rem; font-weight:700; color:var(--gold); }
+.hdr-stat-n.done { color:#6BCB8B; }
+.hdr-stat-l { font-size:.52rem; text-transform:uppercase; letter-spacing:.06em; color:rgba(255,255,255,.4); }
+
+/* NAV */
+.nav { display:flex; align-items:center; justify-content:space-between; padding:12px 18px; background:var(--white); border-bottom:1px solid var(--sand-d); }
+.nav-btn { background:var(--sand); border:1px solid var(--sand-d); border-radius:8px; padding:6px 14px; cursor:pointer; font-size:.9rem; font-family:'DM Sans',sans-serif; transition:all .15s; }
+.nav-btn:hover { background:var(--terra); color:white; border-color:var(--terra); }
+.nav-month { font-family:'Playfair Display',serif; font-size:1.05rem; font-weight:700; text-transform:capitalize; }
+
+/* LEGEND */
+.legend { display:flex; gap:12px; padding:8px 18px; background:var(--white); border-bottom:1px solid var(--sand-d); flex-wrap:wrap; }
+.leg { display:flex; align-items:center; gap:5px; font-size:.68rem; color:#666; }
+.leg-dot { width:10px; height:10px; border-radius:2px; flex-shrink:0; }
+
+/* CALENDAR */
+.cal-wrap { padding:14px 14px 0; }
+.cal-grid { background:var(--white); border-radius:14px; overflow:hidden; box-shadow:0 3px 18px rgba(0,0,0,.08); }
+.cal-head { display:grid; grid-template-columns:repeat(7,1fr); background:var(--night); }
+.cal-head div { text-align:center; padding:8px 2px; font-size:.58rem; font-weight:600; color:rgba(255,255,255,.45); text-transform:uppercase; letter-spacing:.07em; }
+.cal-body { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:#e0e0e0; }
+.day { background:var(--white); min-height:44px; display:flex; flex-direction:column; align-items:center; padding:4px 2px 3px; position:relative; cursor:pointer; transition:background .12s; }
+.day:hover { background:var(--mist); }
+.day.empty { background:#f5f5f5; cursor:default; }
+.day.today .dn { background:var(--terra); color:white; border-radius:50%; }
+.day.ab { background:#FFF0F0; }
+.day.bk { background:#EEF3FF; }
+.day.both { background:linear-gradient(135deg,#FFF0F0 50%,#EEF3FF 50%); }
+.day.done-day { opacity:.6; }
+.day.checkin::after { content:'▶'; position:absolute; left:2px; top:50%; transform:translateY(-50%); font-size:.45rem; color:var(--leaf); }
+.day.checkout::after { content:'◀'; position:absolute; right:2px; top:50%; transform:translateY(-50%); font-size:.45rem; color:#E65100; }
+.dn { font-size:.68rem; font-weight:500; width:22px; height:22px; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.dots { display:flex; gap:2px; margin-top:2px; flex-wrap:wrap; justify-content:center; }
+.dot { width:4px; height:4px; border-radius:50%; }
+.dot-ab { background:var(--airbnb); }
+.dot-bk { background:var(--booking); }
+.day-name { font-size:.45rem; color:#555; text-align:center; line-height:1.2; max-width:100%; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; padding:0 1px; margin-top:1px; }
+
+/* LIST */
+.list-wrap { padding:14px 14px 80px; }
+.list-title { font-family:'Playfair Display',serif; font-size:.9rem; font-weight:700; margin-bottom:10px; color:var(--night); }
+.card { background:var(--white); border-radius:12px; padding:11px 13px; margin-bottom:9px; border-left:4px solid transparent; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+.card.airbnb { border-left-color:var(--airbnb); }
+.card.booking { border-left-color:var(--booking); }
+.card.direto  { border-left-color:#4A7C59; }
+.card.terminated { opacity:.65; }
+.card-top { display:flex; justify-content:space-between; align-items:center; margin-bottom:5px; }
+.card-name { font-weight:600; font-size:.85rem; }
+.card-plat { font-size:.58rem; font-weight:700; padding:2px 7px; border-radius:20px; text-transform:uppercase; }
+.plat-a { background:#FFE8E8; color:var(--airbnb); }
+.plat-b { background:#E8EFFF; color:var(--booking); }
+.plat-d { background:#E8F5E9; color:#2E7D32; }
+.card-dates { display:flex; gap:10px; font-size:.72rem; color:#555; margin-bottom:4px; }
+.card-meta { font-size:.68rem; color:#aaa; }
+.card-hour { font-size:.68rem; color:var(--terra); font-weight:600; margin-top:3px; }
+.card-status { font-size:.65rem; font-weight:600; margin-top:4px; }
+.s-done { color:var(--leaf); }
+.s-now { color:var(--terra); }
+.s-soon { color:var(--booking); }
+
+/* SHARE BAR */
+.share-bar { position:fixed; bottom:0; left:0; right:0; padding:12px 16px; background:var(--white); border-top:1px solid var(--sand-d); display:flex; gap:8px; max-width:480px; margin:0 auto; }
+.wa-btn { flex:1; display:flex; align-items:center; justify-content:center; gap:8px; background:#25D366; color:white; border:none; border-radius:12px; padding:11px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:.85rem; cursor:pointer; transition:opacity .2s; }
+.wa-btn:hover { opacity:.9; }
+.update-btn { background:var(--night); color:var(--sand); border:none; border-radius:12px; padding:11px 14px; font-family:'DM Sans',sans-serif; font-weight:600; font-size:.8rem; cursor:pointer; display:flex; align-items:center; gap:6px; position:relative; overflow:hidden; }
+.update-btn input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; font-size:0; }
+
+/* MODAL */
+.modal-bg { position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:flex-end; justify-content:center; z-index:200; }
+.modal-bg.on { display:flex; }
+.modal { background:var(--white); border-radius:22px 22px 0 0; padding:20px 18px 28px; width:100%; max-width:480px; animation:up .25s ease; }
+@keyframes up { from{transform:translateY(100%)} to{transform:translateY(0)} }
+.modal h3 { font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:12px; }
+.modal-close { float:right; background:#eee; border:none; border-radius:50%; width:26px; height:26px; cursor:pointer; font-size:.8rem; }
+
+.toast { position:fixed; bottom:80px; left:50%; transform:translateX(-50%); background:var(--night); color:white; padding:7px 18px; border-radius:22px; font-size:.74rem; font-weight:500; opacity:0; pointer-events:none; transition:opacity .3s; z-index:300; white-space:nowrap; }
+.toast.on { opacity:1; }
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div>
+      <div class="hdr-sub">Portugal</div>
+      <div class="hdr-title">🏠 Casa do Mosteiro</div>
+    </div>
+    <div class="hdr-stats">
+      <div class="hdr-stat"><div class="hdr-stat-n" id="statEnc">0</div><div class="hdr-stat-l">Em curso</div></div>
+      <div class="hdr-stat"><div class="hdr-stat-n" id="statUpc">0</div><div class="hdr-stat-l">A vir</div></div>
+      <div class="hdr-stat"><div class="hdr-stat-n done" id="statDone">0</div><div class="hdr-stat-l">Terminadas</div></div>
+      <div class="hdr-stat"><div class="hdr-stat-n" id="statTot">0</div><div class="hdr-stat-l">Total</div></div>
+    </div>
+  </div>
+</div>
+
+<div class="nav">
+  <button class="nav-btn" onclick="chM(-1)">‹</button>
+  <div class="nav-month" id="mLabel"></div>
+  <button class="nav-btn" onclick="chM(1)">›</button>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="leg-dot" style="background:#FFE8E8;border:1px solid #FF5A5F55"></div>Airbnb</div>
+  <div class="leg"><div class="leg-dot" style="background:#EEF3FF;border:1px solid #00358055"></div>Booking</div>
+  <div class="leg"><div class="leg-dot" style="background:var(--leaf);border-radius:50%"></div>Chegada</div>
+  <div class="leg"><div class="leg-dot" style="background:#E65100;border-radius:50%"></div>Saída</div>
+</div>
+
+<div class="cal-wrap">
+  <div class="cal-grid">
+    <div class="cal-head">
+      <div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div><div>Dom</div>
+    </div>
+    <div class="cal-body" id="calBody"></div>
+  </div>
+</div>
+
+<div class="list-wrap" style="margin-top:14px">
+  <div class="list-title" id="listTitle">Todas as reservas</div>
+  <div id="resvList"></div>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3 id="modalTitle"></h3>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="share-bar">
+  <button class="wa-btn" onclick="shareWA()">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    Partilhar no WhatsApp
+  </button>
+  <button class="update-btn">
+    📂 Atualizar
+    <input type="file" accept=".xlsx,.xls" onchange="loadExcel(this)">
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script>
+// ── DADOS PRÉ-CARREGADOS ─────────────────────────────────────────────
+let reservations = [
+  {name:"Nelson Santos",               checkin:"2026-04-02", checkout:"2026-04-06", platform:"Airbnb",      guests:5, hour:"Tarde",     phone:"00351933203219"},
+  {name:"Jennifer Kehl",               checkin:"2026-07-03", checkout:"2026-07-05", platform:"Airbnb",      guests:4, hour:"A definir", phone:"0041775301028"},
+  {name:"Pedro Pereira",               checkin:"2026-03-14", checkout:"2026-03-18", platform:"Booking.com", guests:4, hour:"16h00",     phone:"0034687242752"},
+  {name:"Nicole CIOBANU",              checkin:"2026-03-07", checkout:"2026-03-12", platform:"Booking.com", guests:3, hour:"A definir", phone:"0034669766284"},
+  {name:"Emmanuel DUGUET",             checkin:"2025-12-05", checkout:"2025-12-06", platform:"Booking.com", guests:3, hour:"16h00",     phone:"0033674508437"},
+  {name:"María Isabel Moreno Montoro", checkin:"2026-04-16", checkout:"2026-04-19", platform:"Booking.com", guests:6, hour:"A definir", phone:"0034692526433"},
+  {name:"Rubén Rivas lópez",           checkin:"2026-05-08", checkout:"2026-05-10", platform:"Booking.com", guests:6, hour:"19h00",     phone:"0034662673619"},
+  {name:"Rui Semanas",                 checkin:"2026-08-03", checkout:"2026-08-07", platform:"Booking.com", guests:5, hour:"A definir", phone:"00351925359867"},
+  {name:"Bob",                         checkin:"2026-08-25", checkout:"2026-08-28", platform:"Direto",      guests:1, hour:"A definir", phone:"0033616081819"},
+];
+
+const today = new Date();
+let cY = today.getFullYear(), cM = today.getMonth();
+
+// ── UTILS ────────────────────────────────────────────────────────────
+const ds  = d => d.toISOString().split('T')[0];
+const fmt = s => { const[y,m,d]=s.split('-'); return `${d}/${m}/${y}`; };
+const nights = (a,b) => Math.round((new Date(b)-new Date(a))/86400000);
+const todayStr = ds(today);
+
+function statusOf(ci, co){
+  if(co <= todayStr) return {txt:'✅ Terminada', cls:'s-done'};
+  if(ci <= todayStr) return {txt:'🟡 Em curso',  cls:'s-now'};
+  const d = nights(todayStr, ci);
+  if(d<=7) return {txt:`⏰ Em ${d} dia${d>1?'s':''}`, cls:'s-soon'};
+  return {txt:'🔵 A vir', cls:'s-soon'};
+}
+
+let toastT;
+function toast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg; t.classList.add('on');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('on'),3200);
+}
+
+// ── ESTATÍSTICAS ─────────────────────────────────────────────────────
+function renderStats(){
+  const n = todayStr;
+  document.getElementById('statEnc').textContent  = reservations.filter(r=>r.checkin<=n&&r.checkout>n).length;
+  document.getElementById('statUpc').textContent  = reservations.filter(r=>r.checkin>n).length;
+  document.getElementById('statDone').textContent = reservations.filter(r=>r.checkout<=n).length;
+  document.getElementById('statTot').textContent  = reservations.length;
+}
+
+// ── MESES PT-PT ──────────────────────────────────────────────────────
+const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+                'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+// ── CALENDÁRIO ───────────────────────────────────────────────────────
+function renderCal(){
+  document.getElementById('mLabel').textContent = `${MONTHS[cM]} ${cY}`;
+  const fd  = new Date(cY,cM,1).getDay();
+  const off = (fd+6)%7;
+  const dim = new Date(cY,cM+1,0).getDate();
+  let h = '';
+  for(let i=0;i<off;i++) h+='<div class="day empty"></div>';
+
+  for(let d=1;d<=dim;d++){
+    const dstr = `${cY}-${String(cM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const it   = dstr===todayStr;
+    const abRes = reservations.filter(r=>r.platform==='Airbnb'&&r.checkin<=dstr&&r.checkout>dstr);
+    const bkRes = reservations.filter(r=>r.platform!=='Airbnb'&&r.checkin<=dstr&&r.checkout>dstr);
+    const allRes = [...abRes,...bkRes];
+    const isCheckin  = reservations.some(r=>r.checkin===dstr);
+    const isCheckout = reservations.some(r=>r.checkout===dstr);
+    const isDone = allRes.length>0 && allRes.every(r=>r.checkout<=todayStr);
+    const isAb=abRes.length>0, isBk=bkRes.length>0;
+
+    let cls='day';
+    if(it)  cls+=' today';
+    if(isAb&&isBk) cls+=' both';
+    else if(isAb) cls+=' ab';
+    else if(isBk) cls+=' bk';
+    if(isCheckin)  cls+=' checkin';
+    if(isCheckout) cls+=' checkout';
+    if(isDone) cls+=' done-day';
+
+    const nameTag = isCheckin && allRes.length>0
+      ? `<div class="day-name">${allRes[0].name.split(' ')[0]}</div>` : '';
+    const dotsHtml = allRes.length>0
+      ? `<div class="dots">${isAb?'<div class="dot dot-ab"></div>':''}${isBk?'<div class="dot dot-bk"></div>':''}</div>` : '';
+
+    h+=`<div class="${cls}" onclick="dayClick('${dstr}')">
+      <div class="dn">${d}</div>${dotsHtml}${nameTag}
+    </div>`;
+  }
+  document.getElementById('calBody').innerHTML=h;
+  renderList();
+}
+function chM(n){ cM+=n; if(cM>11){cM=0;cY++;} if(cM<0){cM=11;cY--;} renderCal(); }
+
+// ── LISTA ────────────────────────────────────────────────────────────
+function renderList(){
+  const mStart = `${cY}-${String(cM+1).padStart(2,'0')}-01`;
+  const mEnd   = `${cY}-${String(cM+1).padStart(2,'0')}-${new Date(cY,cM+1,0).getDate()}`;
+  const visible = reservations
+    .filter(r=>!(r.checkout<mStart||r.checkin>mEnd))
+    .sort((a,b)=>a.checkin.localeCompare(b.checkin));
+
+  document.getElementById('listTitle').textContent =
+    `${MONTHS[cM]} ${cY} — ${visible.length} reserva${visible.length!==1?'s':''}`;
+
+  if(!visible.length){
+    document.getElementById('resvList').innerHTML=
+      `<div style="text-align:center;padding:24px;color:#bbb;font-size:.8rem">Sem reservas este mês</div>`;
+    return;
+  }
+
+  const platClass = p => p==='Airbnb'?'airbnb':p==='Direto'?'direto':'booking';
+  const platBadge = p => {
+    if(p==='Airbnb') return `<span class="card-plat plat-a">Airbnb</span>`;
+    if(p==='Direto') return `<span class="card-plat plat-d">Direto</span>`;
+    return `<span class="card-plat plat-b">Booking</span>`;
+  };
+
+  document.getElementById('resvList').innerHTML = visible.map(r=>{
+    const st = statusOf(r.checkin,r.checkout);
+    const ni = nights(r.checkin,r.checkout);
+    const terminated = r.checkout<=todayStr ? ' terminated' : '';
+    const hourLine  = r.hour  ? `<div class="card-hour">🕐 Hora de chegada: <strong>${r.hour}</strong></div>` : '';
+    const phoneLine = r.phone ? `<div class="card-hour" style="color:var(--booking)">📞 <a href="tel:${r.phone.replace(/\s/g,'')}" style="color:var(--booking);font-weight:700;text-decoration:none">${r.phone}</a></div>` : '';
+    return `<div class="card ${platClass(r.platform)}${terminated}">
+      <div class="card-top">
+        <div class="card-name">👤 ${r.name}</div>
+        ${platBadge(r.platform)}
+      </div>
+      <div class="card-dates">
+        <span>📥 ${fmt(r.checkin)}</span><span>→</span><span>📤 ${fmt(r.checkout)}</span>
+      </div>
+      <div class="card-meta">🌙 ${ni} noite${ni>1?'s':''} &nbsp;·&nbsp; 👥 ${r.guests} pess.</div>
+      ${hourLine}${phoneLine}
+      <div class="card-status ${st.cls}">${st.txt}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── CLIQUE NO DIA ────────────────────────────────────────────────────
+function dayClick(dstr){
+  const rs = reservations.filter(r=>r.checkin<=dstr&&r.checkout>dstr);
+  const ci = reservations.filter(r=>r.checkin===dstr);
+  const co = reservations.filter(r=>r.checkout===dstr);
+  if(!rs.length&&!ci.length&&!co.length) return;
+  const[y,m,d]=dstr.split('-');
+  document.getElementById('modalTitle').textContent=`${d}/${m}/${y}`;
+  const platClass = p=>p==='Airbnb'?'airbnb':'booking';
+  const platBadge = p=>p==='Airbnb'
+    ?`<span class="card-plat plat-a">Airbnb</span>`
+    :`<span class="card-plat plat-b">Booking</span>`;
+  const all=[...new Map([...ci,...rs,...co].map(r=>[r.name,r])).values()];
+  document.getElementById('modalBody').innerHTML=all.map(r=>{
+    const st=statusOf(r.checkin,r.checkout);
+    const ni=nights(r.checkin,r.checkout);
+    const tag=r.checkin===dstr?'🟢 Chegada':r.checkout===dstr?'🔴 Saída':'🟡 Em curso';
+    const hourLine  = r.hour  ? `<div class="card-hour">🕐 Hora de chegada: <strong>${r.hour}</strong></div>` : '';
+    const phoneLine = r.phone ? `<div class="card-hour" style="color:var(--booking)">📞 <a href="tel:${r.phone.replace(/\s/g,'')}" style="color:var(--booking);font-weight:700;text-decoration:none">${r.phone}</a></div>` : '';
+    return`<div class="card ${platClass(r.platform)}" style="margin-bottom:10px">
+      <div class="card-top"><div class="card-name">${r.name}</div>${platBadge(r.platform)}</div>
+      <div class="card-dates"><span>📥 ${fmt(r.checkin)}</span><span>→</span><span>📤 ${fmt(r.checkout)}</span></div>
+      <div class="card-meta">🌙 ${ni} noite${ni>1?'s':''} · 👥 ${r.guests} pess.</div>
+      ${hourLine}${phoneLine}
+      <div class="card-status ${st.cls}">${tag}</div>
+    </div>`;
+  }).join('');
+  document.getElementById('modalBg').classList.add('on');
+}
+function closeModal(){ document.getElementById('modalBg').classList.remove('on'); }
+document.getElementById('modalBg').addEventListener('click',e=>{
+  if(e.target===document.getElementById('modalBg'))closeModal();
+});
+
+// ── PARTILHAR WHATSAPP ───────────────────────────────────────────────
+function shareWA(){
+  const n=todayStr;
+  const coming=reservations.filter(r=>r.checkout>n).sort((a,b)=>a.checkin.localeCompare(b.checkin));
+  if(!coming.length){ toast('Sem reservas futuras'); return; }
+  let msg=`🏠 *Casa do Mosteiro — Calendário*\n📅 ${new Date().toLocaleDateString('pt-PT')}\n\n`;
+  const now  = coming.filter(r=>r.checkin<=n&&r.checkout>n);
+  const soon = coming.filter(r=>r.checkin>n);
+  if(now.length){
+    msg+=`🟡 *EM CURSO*\n`;
+    now.forEach(r=>{
+      msg+=`• ${r.name} → saída ${fmt(r.checkout)} (${nights(n,r.checkout)} dia${nights(n,r.checkout)>1?'s':''})`;
+      if(r.hour) msg+=` — chegada ${r.hour}`;
+      msg+='\n';
+    });
+    msg+='\n';
+  }
+  if(soon.length){
+    msg+=`🔵 *A VIR*\n`;
+    soon.slice(0,12).forEach(r=>{
+      const ni=nights(r.checkin,r.checkout);
+      msg+=`• ${fmt(r.checkin)} → ${fmt(r.checkout)} — *${r.name}* (${ni} noite${ni>1?'s':''}, ${r.guests} pess.)`;
+      if(r.hour)  msg+=`\n  🕐 ${r.hour}`;
+      if(r.phone) msg+=`\n  📞 ${r.phone}`;
+      msg+='\n';
+    });
+  }
+  const done=reservations.filter(r=>r.checkout<=n).length;
+  msg+=`\n_${coming.length} reserva${coming.length>1?'s':''} · ${done} terminada${done>1?'s':''}_`;
+  window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`,'_blank');
+}
+
+// ── CARREGAR EXCEL ───────────────────────────────────────────────────
+function loadExcel(input){
+  const file=input.files[0]; if(!file) return;
+  toast('A carregar ficheiro…');
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try {
+      const wb=XLSX.read(new Uint8Array(e.target.result), {type:'array', cellDates:true});
+      const ws=wb.Sheets['📋 Réservations'];
+      if(!ws){ toast('❌ Folha "📋 Réservations" não encontrada'); return; }
+
+      const rows=XLSX.utils.sheet_to_json(ws, {header:1, raw:true, defval:null});
+
+      const toYMD = v => {
+        if(!v && v!==0) return null;
+        if(v instanceof Date){
+          const y=v.getFullYear(), m=String(v.getMonth()+1).padStart(2,'0'), d=String(v.getDate()).padStart(2,'0');
+          return `${y}-${m}-${d}`;
+        }
+        if(typeof v==='number' && v>40000 && v<60000){
+          const d=new Date(Math.round((v-25569)*86400*1000));
+          return `${d.getUTCFullYear()}-${String(d.getUTCMonth()+1).padStart(2,'0')}-${String(d.getUTCDate()).padStart(2,'0')}`;
+        }
+        if(typeof v==='string'){
+          const m1=v.match(/^(\d{2})\/(\d{2})\/(\d{4})/);
+          if(m1) return `${m1[3]}-${m1[2]}-${m1[1]}`;
+          const m2=v.match(/^(\d{4})-(\d{2})-(\d{2})/);
+          if(m2) return v.slice(0,10);
+        }
+        return null;
+      };
+
+      // Encontrar linha de cabeçalho
+      let hRow=-1;
+      for(let i=0;i<rows.length;i++){
+        if(rows[i]&&rows[i].some(c=>String(c||'').includes('Voyageur'))){ hRow=i; break; }
+      }
+      if(hRow<0){ toast('❌ Formato não reconhecido'); return; }
+
+      const hdr=rows[hRow].map(h=>String(h||'').trim());
+      const norm=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase();
+      const findCol=key=>hdr.findIndex(h=>norm(h)===norm(key));
+
+      const iPlat=findCol('Plateforme'), iName=findCol('Voyageur');
+      const iIn=findCol('Arrivée'), iOut=findCol('Départ'), iG=findCol('Personnes');
+      // Heure d'arrivée — col O (index 14) ou busca pelo header
+      const iHour=findCol("Heure d'arrivée");
+
+      const imported=[];
+      for(let i=hRow+1;i<rows.length;i++){
+        const row=rows[i]; if(!row) continue;
+        const name=row[iName], plat=row[iPlat];
+        if(!name||typeof name!=='string'||name==='TOTAUX') continue;
+        const ci=toYMD(row[iIn]), co=toYMD(row[iOut]);
+        if(!ci||!co) continue;
+        const iPhone = hdr.findIndex(h=>norm(h)===norm('Téléphone')||norm(h).includes('tel'));
+        imported.push({
+          name:   name.trim(),
+          checkin: ci, checkout: co,
+          platform: String(plat||'').trim(),
+          guests:  parseInt(row[iG])||1,
+          hour:    iHour>=0 ? (String(row[iHour]||'').trim()) : '',
+          phone:   iPhone>=0 ? (String(row[iPhone]||'').trim()) : '',
+        });
+      }
+      if(!imported.length){ toast('❌ Nenhuma reserva encontrada'); return; }
+      reservations=imported;
+      renderStats();
+      const n=todayStr;
+      const next=imported.filter(r=>r.checkout>=n).sort((a,b)=>a.checkin.localeCompare(b.checkin))[0];
+      if(next){ const d=new Date(next.checkin); cY=d.getFullYear(); cM=d.getMonth(); }
+      renderCal();
+      toast(`✅ ${imported.length} reserva${imported.length>1?'s':''} carregada${imported.length>1?'s':''}!`);
+    } catch(err){
+      toast('❌ Erro ao ler o ficheiro');
+      console.error(err);
+    }
+  };
+  reader.readAsArrayBuffer(file);
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────
+renderStats();
+// Ir para o mês da próxima reserva
+const futureR=reservations.filter(r=>r.checkout>=todayStr).sort((a,b)=>a.checkin.localeCompare(b.checkin));
+if(futureR.length){ const d=new Date(futureR[0].checkin); cY=d.getFullYear(); cM=d.getMonth(); }
+renderCal();
+
+// ── AUTO-LOAD desde GitHub ────────────────────────────────────────────
+// Tenta carregar dados atualizados de reservas.json no mesmo repositório
+(async () => {
+  try {
+    // Detecta se está a correr num GitHub Pages
+    const base = window.location.href.includes('github.io')
+      ? window.location.href.replace(/\/[^\/]*$/, '')
+      : null;
+    if (!base) return; // local ou Netlify — usa dados embutidos
+    const url = base + '/reservas.json?t=' + Date.now();
+    const res = await fetch(url);
+    if (!res.ok) return;
+    const data = await res.json();
+    if (Array.isArray(data) && data.length > 0) {
+      reservations = data;
+      renderStats();
+      const n = TDY;
+      const next = reservations.filter(r=>r.co>=n).sort((a,b)=>a.ci.localeCompare(b.ci))[0];
+      if(next){ const d=new Date(next.ci); cY=d.getFullYear(); cM=d.getMonth(); }
+      renderCal();
+    }
+  } catch(e) { /* silencieux — utilise données embutidas */ }
+})();
+
+</script>
+</body>
+</html>
