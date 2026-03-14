@@ -1,0 +1,31 @@
+name: Atualizar Reservas
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  convert:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Instalar dependências
+        run: pip install openpyxl
+
+      - name: Converter Excel → JSON
+        run: python convert.py
+
+      - name: Commit e push reservas.json
+        run: |
+          git config user.name "Casa Bot"
+          git config user.email "bot@casa-mosteiro.com"
+          git add reservas.json
+          git diff --staged --quiet || git commit -m "🏠 Reservas atualizadas"
+          git push
