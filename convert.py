@@ -88,13 +88,13 @@ for r in range(header_row + 1, ws.max_row + 1):
         continue
 
     reservations.append({
-        "name":  name_str,
-        "ci":    ci,
-        "co":    co,
-        "plat":  str(plat or '').strip(),
-        "guests": int(g) if g and str(g).isdigit() else (int(float(str(g))) if g else 1),
-        "hour":  str(hour or '').strip(),
-        "phone": str(phone or '').strip(),
+        "name":     name_str,
+        "checkin":  ci,
+        "checkout": co,
+        "platform": str(plat or '').strip(),
+        "guests":   int(g) if g and str(g).isdigit() else (int(float(str(g))) if g else 1),
+        "hour":     str(hour or '').strip(),
+        "phone":    str(phone or '').strip(),
     })
 
 print(f"✅ {len(reservations)} reservas encontradas")
