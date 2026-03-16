@@ -70,14 +70,5 @@
     "guests": 5,
     "hour": "A definir",
     "phone": "00351925359867"
-  },
-  {
-    "name": "Bob",
-    "checkin": "2026-08-25",
-    "checkout": "2026-08-28",
-    "platform": "Direto",
-    "guests": 1,
-    "hour": "A definir",
-    "phone": "0033616081819"
   }
 ]
