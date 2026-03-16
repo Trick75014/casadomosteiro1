@@ -70,23 +70,5 @@
     "guests": 5,
     "hour": "A definir",
     "phone": "00351925359867"
-  },
-  {
-    "name": "Banana",
-    "checkin": "2026-03-20",
-    "checkout": "2026-03-23",
-    "platform": "Direto",
-    "guests": 2,
-    "hour": "Tarde",
-    "phone": "254102"
-  },
-  {
-    "name": "Fernando",
-    "checkin": "2026-03-24",
-    "checkout": "2026-03-28",
-    "platform": "Direto",
-    "guests": 2,
-    "hour": "A definir",
-    "phone": "39325"
   }
 ]
