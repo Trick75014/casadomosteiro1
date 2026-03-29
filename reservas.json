@@ -63,12 +63,21 @@
     "phone": "0034662673619"
   },
   {
-    "name": "Rui Semanas",
-    "checkin": "2026-08-03",
-    "checkout": "2026-08-07",
+    "name": "Barbara Gama",
+    "checkin": "2026-06-12",
+    "checkout": "2026-06-14",
     "platform": "Booking.com",
-    "guests": 5,
+    "guests": 3,
     "hour": "A definir",
-    "phone": "00351925359867"
+    "phone": "00351962553779"
+  },
+  {
+    "name": "X",
+    "checkin": "2026-05-01",
+    "checkout": "2026-05-02",
+    "platform": "Direto",
+    "guests": 3,
+    "hour": "A definir",
+    "phone": "00351962553779"
   }
 ]
