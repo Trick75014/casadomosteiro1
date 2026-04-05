@@ -50,7 +50,7 @@
     "checkout": "2026-04-19",
     "platform": "Booking.com",
     "guests": 6,
-    "hour": "A definir",
+    "hour": "Tarde",
     "phone": "0034692526433"
   },
   {
@@ -70,6 +70,15 @@
     "guests": 3,
     "hour": "A definir",
     "phone": "00351962553779"
+  },
+  {
+    "name": "Bruno Sousa",
+    "checkin": "2026-06-02",
+    "checkout": "2026-06-05",
+    "platform": "Abritel",
+    "guests": 5,
+    "hour": "A definir",
+    "phone": "0623755787"
   },
   {
     "name": "X",
