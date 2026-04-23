@@ -72,6 +72,33 @@
     "phone": "00351962553779"
   },
   {
+    "name": "Juan Neira Conde",
+    "checkin": "2026-10-02",
+    "checkout": "2026-10-04",
+    "platform": "Booking.com",
+    "guests": 6,
+    "hour": "A definir",
+    "phone": "0034675633865"
+  },
+  {
+    "name": "Ana Isabel Bechaud",
+    "checkin": "2026-08-02",
+    "checkout": "2026-08-06",
+    "platform": "Booking.com",
+    "guests": 2,
+    "hour": "A definir",
+    "phone": "0619814951"
+  },
+  {
+    "name": "Dulce Morais",
+    "checkin": "2026-09-26",
+    "checkout": "2026-09-30",
+    "platform": "Booking.com",
+    "guests": 7,
+    "hour": "A definir",
+    "phone": "00351936282687"
+  },
+  {
     "name": "Bruno Sousa",
     "checkin": "2026-06-02",
     "checkout": "2026-06-05",
