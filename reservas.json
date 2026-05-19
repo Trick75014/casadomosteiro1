@@ -54,7 +54,7 @@
     "phone": "0034692526433"
   },
   {
-    "name": "Rubén Rivas lópez",
+    "name": "Eva Fernandez Losada",
     "checkin": "2026-05-08",
     "checkout": "2026-05-10",
     "platform": "Booking.com",
@@ -115,5 +115,23 @@
     "guests": 3,
     "hour": "A definir",
     "phone": "00351962553779"
+  },
+  {
+    "name": "Alex Sandro Moreira",
+    "checkin": "2026-09-10",
+    "checkout": "2026-09-14",
+    "platform": "Booking.com",
+    "guests": 3,
+    "hour": "A definir",
+    "phone": "+393463256052"
+  },
+  {
+    "name": "Pedro Joao Rodrigues",
+    "checkin": "2027-05-14",
+    "checkout": "2027-05-16",
+    "platform": "Booking.com",
+    "guests": 4,
+    "hour": "A definir",
+    "phone": "+351960070755"
   }
 ]
