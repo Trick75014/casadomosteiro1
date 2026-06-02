@@ -133,5 +133,23 @@
     "guests": 4,
     "hour": "A definir",
     "phone": "+351960070755"
+  },
+  {
+    "name": "Adelina Neves",
+    "checkin": "2026-05-24",
+    "checkout": "2026-05-27",
+    "platform": "Airbnb",
+    "guests": 4,
+    "hour": "16h00",
+    "phone": "+351935023820"
+  },
+  {
+    "name": "Y",
+    "checkin": "2026-07-16",
+    "checkout": "2026-07-20",
+    "platform": "Direto",
+    "guests": 1,
+    "hour": "y",
+    "phone": "y"
   }
 ]
