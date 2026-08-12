@@ -153,12 +153,21 @@
     "phone": "y"
   },
   {
-    "name": "Sandrine Brahiti",
-    "checkin": "2026-08-17",
-    "checkout": "2026-08-30",
+    "name": "Antonio Pinho",
+    "checkin": "2026-08-16",
+    "checkout": "2026-08-21",
+    "platform": "Booking.com",
+    "guests": 3,
+    "hour": "A definir",
+    "phone": "00351919451210"
+  },
+  {
+    "name": "Ana Moura",
+    "checkin": "2026-08-23",
+    "checkout": "2026-08-27",
     "platform": "Booking.com",
     "guests": 4,
     "hour": "A definir",
-    "phone": "0650464553"
+    "phone": "00351912080179"
   }
 ]
