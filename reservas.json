@@ -153,7 +153,7 @@
     "phone": "y"
   },
   {
-    "name": "Antonio Pinho",
+    "name": "Antonio Pinho empresa",
     "checkin": "2026-08-16",
     "checkout": "2026-08-21",
     "platform": "Booking.com",
@@ -167,7 +167,16 @@
     "checkout": "2026-08-27",
     "platform": "Booking.com",
     "guests": 4,
-    "hour": "A definir",
+    "hour": "19h00",
     "phone": "00351912080179"
+  },
+  {
+    "name": "Antonio Pinho empresa",
+    "checkin": "2026-08-27",
+    "checkout": "2026-09-10",
+    "platform": "Direto",
+    "guests": 4,
+    "hour": "A definir",
+    "phone": "00351919451210"
   }
 ]
