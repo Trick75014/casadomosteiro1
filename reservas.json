@@ -178,5 +178,23 @@
     "guests": 4,
     "hour": "A definir",
     "phone": "00351919451210"
+  },
+  {
+    "name": "Irene Ivens",
+    "checkin": "2026-11-19",
+    "checkout": "2026-11-22",
+    "platform": "Booking.com",
+    "guests": 4,
+    "hour": "18h00",
+    "phone": "+351 934 212 650"
+  },
+  {
+    "name": "Cindy",
+    "checkin": "2026-10-14",
+    "checkout": "2026-11-07",
+    "platform": "Airbnb",
+    "guests": 3,
+    "hour": "A definir",
+    "phone": "xxx"
   }
 ]
