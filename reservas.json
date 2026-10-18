@@ -196,5 +196,14 @@
     "guests": 3,
     "hour": "A definir",
     "phone": "xxx"
+  },
+  {
+    "name": "Duarte Maria",
+    "checkin": "2026-11-13",
+    "checkout": "2026-11-15",
+    "platform": "Booking.com",
+    "guests": 3,
+    "hour": "A definir",
+    "phone": "+351961948107"
   }
 ]
