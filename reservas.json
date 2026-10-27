@@ -205,5 +205,23 @@
     "guests": 3,
     "hour": "A definir",
     "phone": "+351961948107"
+  },
+  {
+    "name": "Mesina Ana",
+    "checkin": "2026-11-08",
+    "checkout": "2026-11-11",
+    "platform": "Booking.com",
+    "guests": 4,
+    "hour": "18h00",
+    "phone": "+351 968 939 719"
+  },
+  {
+    "name": "Carla Lopes",
+    "checkin": "2026-12-24",
+    "checkout": "2026-12-27",
+    "platform": "Booking.com",
+    "guests": 4,
+    "hour": "A definir",
+    "phone": "+34 630 58 07 61"
   }
 ]
