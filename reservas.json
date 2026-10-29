@@ -223,5 +223,14 @@
     "guests": 4,
     "hour": "A definir",
     "phone": "+34 630 58 07 61"
+  },
+  {
+    "name": "Antonio Policarpo",
+    "checkin": "2026-07-23",
+    "checkout": "2026-07-26",
+    "platform": "Booking.com",
+    "guests": 4,
+    "hour": "A definir",
+    "phone": "+41 79 136 16 31"
   }
 ]
