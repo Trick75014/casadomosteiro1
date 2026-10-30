@@ -1,0 +1,27 @@
+name: Rappel arrivées
+
+on:
+  schedule:
+    - cron: '0 8 * * *'      # chaque jour à 08:00 UTC (≈ 9h-10h en France)
+  workflow_dispatch:         # lancement manuel pour tester
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  rappel:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - run: pip install openpyxl
+      - name: Créer les rappels
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          OWNER: ${{ github.repository_owner }}
+          JOURS: '5,2'       # jours avant l'arrivée (ex. '7,3,1')
+        run: python rappel.py
