@@ -23,5 +23,5 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
           OWNER: ${{ github.repository_owner }}
-          JOURS: '5,2'       # jours avant l'arrivée (ex. '7,3,1')
+          JOURS: '9'       # jours avant l'arrivée (ex. '7,3,1')
         run: python rappel.py
