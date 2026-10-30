@@ -12,7 +12,7 @@ from datetime import datetime, date, timedelta
 from zoneinfo import ZoneInfo
 from openpyxl import load_workbook
 
-JOURS = [int(x) for x in os.environ.get("JOURS", "5,2").split(",") if x.strip()]
+JOURS = [int(x) for x in os.environ.get("JOURS", "9").split(",") if x.strip()]
 UNCONFIRMED = {"", "a definir", "tarde", "manha", "noite", "none"}
 
 
