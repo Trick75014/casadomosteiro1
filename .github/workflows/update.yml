@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   convert:
     runs-on: ubuntu-latest
@@ -19,13 +22,13 @@ jobs:
       - name: Instalar dependências
         run: pip install openpyxl
 
-      - name: Converter Excel para JSON
+      - name: Converter Excel para JSON e calendário
         run: python convert.py
 
-      - name: Guardar reservas.json
+      - name: Guardar reservas.json e calendrier.ics
         run: |
           git config user.name "Casa Bot"
           git config user.email "bot@casa-mosteiro.com"
-          git add reservas.json
+          git add reservas.json calendrier.ics
           git diff --staged --quiet || git commit -m "Reservas atualizadas"
           git push
