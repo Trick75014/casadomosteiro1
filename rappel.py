@@ -22,7 +22,7 @@ def norm(s):
 
 
 def load_reservations():
-    xlsx = sorted(glob.glob("*.xlsx"), key=os.path.getmtime, reverse=True)[0]
+    xlsx = sorted(glob.glob("*.xlsx") + glob.glob("*.xlsm"), key=os.path.getmtime, reverse=True)[0]
     wb = load_workbook(xlsx, data_only=True)
     ws = next((wb[n] for n in wb.sheetnames if "serva" in n.lower()), wb.active)
     hr = next(r for r in range(1, 8) if "voyageur" in " ".join(norm(c.value) for c in ws[r]))

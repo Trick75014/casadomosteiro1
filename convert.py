@@ -6,7 +6,7 @@ import json, glob, sys, os, re
 from datetime import datetime, date
 
 # ── Encontrar o ficheiro Excel ────────────────────────────────────────
-files = glob.glob('*.xlsx') + glob.glob('*.xls')
+files = glob.glob('*.xlsx') + glob.glob('*.xlsm') + glob.glob('*.xls')
 if not files:
     print("ERRO: Nenhum ficheiro Excel encontrado!")
     print("Ficheiros presentes:", os.listdir('.'))
@@ -121,3 +121,43 @@ if not R:
 with open('reservas.json', 'w', encoding='utf-8') as f:
     json.dump(R, f, ensure_ascii=False, indent=2)
 print("reservas.json guardado!")
+
+# ── Calendário .ics (sem nomes nem telefones — o site é público) ──────
+# Subscrever no telemóvel: webcal://trick75014.github.io/casadomosteiro1/calendrier.ics
+import hashlib
+SITE = 'https://trick75014.github.io/casadomosteiro1/'
+UNCONF = {'', 'a definir', 'tarde', 'manha', 'noite', 'none'}
+
+def esc(t):
+    return t.replace('\\', '\\\\').replace(';', '\\;').replace(',', '\\,').replace('\n', '\\n')
+
+def fold(line):
+    out, cur = [], ''
+    for ch in line:
+        if len((cur + ch).encode('utf-8')) > (75 if not out else 74):
+            out.append(cur); cur = ch
+        else:
+            cur += ch
+    out.append(cur)
+    return '\r\n '.join(out)
+
+L = ['BEGIN:VCALENDAR', 'VERSION:2.0', 'PRODID:-//Casa do Mosteiro//Reservas//FR',
+     'CALSCALE:GREGORIAN', 'METHOD:PUBLISH', 'X-WR-CALNAME:Casa do Mosteiro',
+     'REFRESH-INTERVAL;VALUE=DURATION:PT6H', 'X-PUBLISHED-TTL:PT6H']
+for x in R:
+    uid = hashlib.sha1(f"{x['name']}|{x['checkin']}|{x['checkout']}".encode()).hexdigest()[:16]
+    h = x['hour']
+    hour_txt = h if norm(h) not in UNCONF else 'heure a confirmer'
+    L += ['BEGIN:VEVENT', f'UID:{uid}@casadomosteiro', 'DTSTAMP:20260101T000000Z',
+          'DTSTART;VALUE=DATE:' + x['checkin'].replace('-', ''),
+          'DTEND;VALUE=DATE:' + x['checkout'].replace('-', ''),
+          'SUMMARY:' + esc('🏠 Casa do Mosteiro — séjour'),
+          'DESCRIPTION:' + esc(f'Arrivée prévue : {hour_txt}. Détails : {SITE}'), 'TRANSP:OPAQUE']
+    # alarmes à 09h00, 5 jours puis 2 jours avant l'arrivée (événement « journée entière »)
+    for trig, label in (('-P4DT15H', 'Arrivée dans 5 jours'), ('-P1DT15H', 'Arrivée dans 2 jours')):
+        L += ['BEGIN:VALARM', 'ACTION:DISPLAY', 'DESCRIPTION:' + label, 'TRIGGER:' + trig, 'END:VALARM']
+    L.append('END:VEVENT')
+L.append('END:VCALENDAR')
+with open('calendrier.ics', 'w', encoding='utf-8', newline='') as f:
+    f.write('\r\n'.join(fold(l) for l in L) + '\r\n')
+print('calendrier.ics guardado!', len(R), 'eventos')
