@@ -223,5 +223,14 @@
     "guests": 4,
     "hour": "A definir",
     "phone": "+41 79 136 16 31"
+  },
+  {
+    "name": "David Martins",
+    "checkin": "2026-11-20",
+    "checkout": "2026-11-22",
+    "platform": "Booking.com",
+    "guests": 2,
+    "hour": "19h00",
+    "phone": "00351914583508"
   }
 ]
