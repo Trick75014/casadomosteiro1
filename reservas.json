@@ -232,5 +232,14 @@
     "guests": 2,
     "hour": "19h00",
     "phone": "00351914583508"
+  },
+  {
+    "name": "Kamran Arshad",
+    "checkin": "2026-11-30",
+    "checkout": "2026-12-03",
+    "platform": "Booking.com",
+    "guests": 6,
+    "hour": "A definir",
+    "phone": "00351920085333"
   }
 ]
